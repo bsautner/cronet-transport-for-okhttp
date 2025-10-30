@@ -29,10 +29,18 @@ jobs:
       uses: android-actions/setup-android@v3
     
     - name: Install Android SDK components
-      run: |
-        yes | sdkmanager "platform-tools" "platforms;android-32" "build-tools;30.0.2" "ndk;21.4.7075529" || if [ $? -eq 141 ]; then true; else exit $?; fi
-        yes | sdkmanager --licenses || if [ $? -eq 141 ]; then true; else exit $?; fi
       shell: bash
+      run: |
+          set -euo pipefail
+
+           sdkmanager --install \
+           "platform-tools" \
+           "platforms;android-32" \
+           "build-tools;30.0.2" \
+           "ndk;21.4.7075529"
+
+    
+            sdkmanager --licenses <<'EOF'
     
     - name: Set up Bazel
       uses: bazel-contrib/setup-bazel@0.8.5
