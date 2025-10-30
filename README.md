@@ -169,6 +169,29 @@ list of limitations and features that are not provided by the bridge:
 ### Call factory incompatibilities
   - `OkHttpClient` configuration is unavailable and bypassed completely.
 
+## Building from source
+
+This project uses [Bazel](https://bazel.build/) for building. A GitHub Actions workflow is configured to automatically build the Android library on every push and pull request.
+
+### Automated builds
+
+The repository includes a CI/CD workflow (`.github/workflows/android-build.yml`) that:
+- Builds the Android library artifact using Bazel
+- Runs all tests in the `javatests/` directory
+- Archives the built artifacts (`.aar` and `.jar` files) for download
+- Saves test results for review
+
+The workflow runs on:
+- Push to `main` or `master` branches
+- Pull requests to `main` or `master` branches
+- Manual trigger via `workflow_dispatch`
+
+Build artifacts are retained for 30 days and can be downloaded from the Actions tab in GitHub.
+
+### Local builds
+
+For local development and building, please see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## For contributors
 
 Please see [CONTRIBUTING.md](CONTRIBUTING.md).
