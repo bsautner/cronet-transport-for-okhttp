@@ -30,7 +30,7 @@ jobs:
     
     - name: Install Android SDK components
       run: |
-        yes | sdkmanager "platform-tools" "platforms;android-32" "build-tools;30.0.2" "ndk;21.4.7075529"
+        sdkmanager "platform-tools" "platforms;android-32" "build-tools;30.0.2" "ndk;21.4.7075529"
         yes | sdkmanager --licenses
       shell: bash
     
