@@ -41,7 +41,7 @@ The workflow produces two sets of artifacts:
 
 #### Library Artifacts
 - **Name**: `library-artifacts`
-- **Contents**: All `.aar` and `.jar` files from the build, plus any files matching `okhttp_cronet_transport*`
+- **Contents**: All `.aar` and `.jar` files from `bazel-bin/`, plus any files matching `bazel-bin/**/okhttp_cronet_transport*`
 - **Retention**: 30 days
 - **Download from**: Actions tab → Select workflow run → Artifacts section
 
@@ -53,15 +53,22 @@ The workflow produces two sets of artifacts:
 
 ### Build Commands
 
-The main build command used:
+The main build command used (builds the primary library target):
 ```bash
 bazel build //:okhttp_cronet_transport
 ```
 
-The test command used:
+Note: This builds the main library target specifically. To build the entire repository as mentioned in CONTRIBUTING.md, you would use:
+```bash
+bazel build //...
+```
+
+The test command used (runs all tests, continues on error):
 ```bash
 bazel test //javatests/...
 ```
+
+**Important**: Tests are configured with `continue-on-error: true`, meaning the workflow will succeed and produce artifacts even if some tests fail. Check the test-results artifact to see which tests passed or failed.
 
 ### Environment Variables
 
