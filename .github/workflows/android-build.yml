@@ -52,18 +52,40 @@ jobs:
         bazel build //:okhttp_cronet_transport
       shell: bash
     
+    - name: List build artifacts
+      run: |
+        echo "=== Build artifacts in bazel-bin/ ==="
+        find bazel-bin/ -type f \( -name "*.aar" -o -name "*.jar" \) -ls || true
+        echo ""
+        echo "=== Main library target location ==="
+        ls -lh bazel-bin/libokhttp_cronet_transport.jar 2>/dev/null || echo "Main JAR not found at expected location"
+        ls -lh bazel-bin/okhttp_cronet_transport.aar 2>/dev/null || echo "Main AAR not found at expected location"
+      shell: bash
+    
     - name: Run tests
       run: |
         bazel test //javatests/...
       continue-on-error: true
       shell: bash
     
-    - name: Archive build artifacts
+    - name: Archive library artifacts
+      uses: actions/upload-artifact@v4
+      if: success() || failure()
+      with:
+        name: library-artifacts
+        path: |
+          bazel-bin/**/*.aar
+          bazel-bin/**/*.jar
+          bazel-bin/**/okhttp_cronet_transport*
+        retention-days: 30
+        if-no-files-found: warn
+    
+    - name: Archive test results
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: build-artifacts
+        name: test-results
         path: |
-          bazel-bin/
-          bazel-out/
+          bazel-testlogs/
         retention-days: 7
+        if-no-files-found: ignore
